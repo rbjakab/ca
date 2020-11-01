@@ -14,5 +14,4 @@ public class PathVertex {
         this.loc = loc;
         this.parentEdge = parentEdge;
     }
-
 }
