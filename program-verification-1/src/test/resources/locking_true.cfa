@@ -7,6 +7,11 @@ main process cfa {
 	loc L6
 	init loc L0
 	loc L9
+	loc LX
+	loc LY
+	loc LW
+	loc LA
+	loc LB
 	final loc L1
 	error loc L2
 	loc L8
@@ -20,10 +25,14 @@ main process cfa {
 	L8 -> L1 {
 		assume not (new /= old)
 	}
-	L9 -> L8 {
+	L9 -> LX {
 		assume tmp_0 /= 0
-		lock := 0
-		new := new + 1
+	}
+	LX -> LY {
+	    lock := 0
+	}
+	LY -> L8 {
+	    new := new + 1
 	}
 	L0 -> L6 {
 		lock := 0
@@ -31,10 +40,17 @@ main process cfa {
 	L6 -> L2 {
 		assume not (lock = 0)
 	}
-	L6 -> L9 {
+	L6 -> LW {
 		assume lock = 0
-		lock := 1
-		old := new
-		havoc tmp_0
+
+	}
+	LW -> LA {
+	    lock := 1
+	}
+	LA -> LB {
+	    old := new
+	}
+	LB -> L9 {
+	    havoc tmp_0
 	}
 }

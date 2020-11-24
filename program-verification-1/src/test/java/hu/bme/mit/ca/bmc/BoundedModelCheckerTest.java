@@ -1,6 +1,6 @@
 package hu.bme.mit.ca.bmc;
 
-//import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,12 +52,12 @@ public final class BoundedModelCheckerTest {
 		final CFA cfa = CfaDslManager.createCfa(inputStream);
 		final SafetyChecker checker = BoundedModelChecker.create(cfa, bound, 5);
 
-//		final SafetyResult result = checker.check();
-//		if (safe) {
-//			assertEquals(SafetyResult.UNKNOWN, result);
-//		} else {
-//			assertEquals(SafetyResult.UNSAFE, result);
-//		}
+		final SafetyResult result = checker.check();
+		if (safe) {
+			assertEquals(SafetyResult.UNKNOWN, result);
+		} else {
+			assertEquals(SafetyResult.UNSAFE, result);
+		}
 	}
 
 }

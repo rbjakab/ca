@@ -14,4 +14,12 @@ public class PathVertex {
         this.loc = loc;
         this.parentEdge = parentEdge;
     }
+
+    @Override
+    public String toString() {
+        return "PathVertex{" +
+                "key=" + key +
+                ", loc=" + loc.getName() +
+                '}';
+    }
 }
