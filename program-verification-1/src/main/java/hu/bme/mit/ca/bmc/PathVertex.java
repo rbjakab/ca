@@ -17,9 +17,24 @@ public class PathVertex {
 
     @Override
     public String toString() {
-        return "PathVertex{" +
-                "key=" + key +
-                ", loc=" + loc.getName() +
-                '}';
+        return "PathVertex{" + "key=" + key + ", loc=" + loc.getName() +
+                ", parentKey=" + parentKey + " parentEdge=" + edgeToString() + '}';
+    }
+
+    private String edgeToString() {
+        String stringForReturn = "";
+
+        if (parentEdge != null) {
+            stringForReturn += "<";
+            stringForReturn += "Src: ";
+            stringForReturn += parentEdge.getSource().toString();
+            stringForReturn += " Trgt: ";
+            stringForReturn += parentEdge.getTarget().toString();
+            stringForReturn += " Stmt: ";
+            stringForReturn += parentEdge.getStmt().toString();
+            stringForReturn += ">";
+        }
+
+        return stringForReturn;
     }
 }

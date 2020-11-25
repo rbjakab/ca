@@ -43,6 +43,9 @@ public final class BoundedModelCheckerTest {
 
 				{ "src/test/resources/locking_true.cfa", true, 30 },
 
+				{ "src/test/resources/locks_15_false.c_1.cfa", false, 300},
+
+				{ "src/test/resources/sajat.cfa", true, 300},
 		});
 	}
 

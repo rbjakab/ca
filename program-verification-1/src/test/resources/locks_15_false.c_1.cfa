@@ -1,0 +1,47 @@
+main process cfa {
+	var a : int
+	var b : int
+	var c : int
+	var d : int
+
+	init loc L0
+	loc L7
+	loc L3
+	loc LX
+	loc LY
+	error loc L2
+	loc L6
+	loc L4
+	final loc L1
+
+	L0 -> LX {
+		havoc a
+	}
+	LX -> L4 {
+	    c := a
+	}
+	L3 -> L4 {
+		assume false
+	}
+	L7 -> L6 {
+		assume not (d = 0)
+	}
+	L3 -> L2 {
+		assume not false
+	}
+	L6 -> L3 {
+		assume not (c /= 0)
+	}
+	L7 -> L1 {
+		assume d = 0
+	}
+	L6 -> L4 {
+		assume c /= 0
+	}
+	L4 -> LY {
+		havoc b
+	}
+	LY -> L7 {
+	    d := b
+	}
+}
