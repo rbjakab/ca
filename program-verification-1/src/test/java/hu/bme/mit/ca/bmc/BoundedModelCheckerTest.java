@@ -34,18 +34,23 @@ public final class BoundedModelCheckerTest {
 		return Arrays.asList(new Object[][] {
 
 				{ "src/test/resources/ca-ex_false.cfa", false, 30 },
+				{ "src/test/resources/ca-ex_false_simpled.cfa", false, 30 },
 
-				{ "src/test/resources/counter5_false.cfa", false, 30 },
+				{ "src/test/resources/counter5_false_simpled.cfa", false, 30 },
 
-				{ "src/test/resources/counter5_true.cfa", true, 30 },
+				{ "src/test/resources/counter5_true_simpled.cfa", true, 30 },
 
 				{ "src/test/resources/gcd_true.cfa", true, 15 },
+				{ "src/test/resources/gcd_true_simpled.cfa", true, 15 },
 
 				{ "src/test/resources/locking_true.cfa", true, 30 },
+				{ "src/test/resources/locking_true_simpled.cfa", true, 30 },
 
 				{ "src/test/resources/locks_15_false.c_1.cfa", false, 300},
+				{ "src/test/resources/locks_15_false.c_1_simpled.cfa", false, 300},
 
 				{ "src/test/resources/sajat.cfa", true, 300},
+
 		});
 	}
 

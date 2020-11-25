@@ -5,20 +5,29 @@ main process cfa {
 	init loc LI
 	loc L0
 	loc L1
+	loc LX
+	loc LY
+	loc LZ
 	final loc LF
 	error loc LE
 
-	LI -> L0{
+	LI -> LX {
 		assume a > 0
-		assume b > 0
 	}
-	L0 -> L0 {
+	LX -> L0 {
+	    assume b > 0
+	}
+	L0 -> LY {
 		assume a > b
-		a := a - b
 	}
-	L0 -> L0 {
+	LY -> L0 {
+	    a := a - b
+	}
+	L0 -> LZ {
 		assume a < b
-		b := b - a
+	}
+	LZ -> L0 {
+	    b := b - a
 	}
 	L0 -> L1 {
 		assume a = b

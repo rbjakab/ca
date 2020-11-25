@@ -5,16 +5,22 @@ main process cfa {
 	final loc L1
 	init loc L0
 	error loc L2
+	loc LX
+	loc LY
 	loc L5
 	loc L6
 
-	L0 -> L5 {
+	L0 -> LX {
 		x := 11
-		i := 0
 	}
-	L5 -> L5 {
+	LX -> L5 {
+	    i := 0
+	}
+	L5 -> LY {
 		assume i < x
-		i := i + 1
+	}
+	LY -> L5 {
+	    i := i + 1
 	}
 	L6 -> L1 {
 		assume i = 0
