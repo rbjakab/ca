@@ -18,7 +18,7 @@ public class PathVertex {
     @Override
     public String toString() {
         return "PathVertex{" + "key=" + key + ", loc=" + loc.getName() +
-                ", parentKey=" + parentKey + " parentEdge=" + edgeToString() + '}';
+                ", parentKey=" + parentKey + '}';
     }
 
     private String edgeToString() {

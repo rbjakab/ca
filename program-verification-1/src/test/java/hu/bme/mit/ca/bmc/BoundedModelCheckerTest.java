@@ -46,10 +46,25 @@ public final class BoundedModelCheckerTest {
 				{ "src/test/resources/locking_true.cfa", true, 30 },
 				{ "src/test/resources/locking_true_simpled.cfa", true, 30 },
 
-				{ "src/test/resources/locks_15_false.c_1.cfa", false, 300},
-				{ "src/test/resources/locks_15_false.c_1_simpled.cfa", false, 300},
+				{ "src/test/resources/locks_15_false.c_1.cfa", false, 30 },
+				{ "src/test/resources/locks_15_false.c_1_simpled.cfa", false, 30 },
 
-				{ "src/test/resources/sajat.cfa", true, 300},
+				{ "src/test/resources/sajat.cfa", true, 30 },
+
+				{ "D:\\SzakdogaTesztek\\eca\\Problem01_label31_true-unreach-call.c_0.cfa", true, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem01_label52_true-unreach-call.c_0.cfa", true, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem02_label26_true-unreach-call.c_0.cfa", true, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem02_label43_false-unreach-call.c_0.cfa", false, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label02_true-unreach-call.c_0.cfa", true, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label38_true-unreach-call.c_0.cfa", true, 30 },
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label26_false-unreach-call.c_0.cfa", false, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label13_false-unreach-call.c_0.cfa", false, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label50_false-unreach-call.c_0.cfa", false, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem01_label33_false-unreach-call.c_0.cfa", false, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem01_label32_false-unreach-call.c_0.cfa", false, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label21_true-unreach-call.c_0.cfa", true, 30 }, //
+				{ "D:\\SzakdogaTesztek\\eca\\Problem03_label18_true-unreach-call.c_0.cfa", true, 30 }, //
+
 
 		});
 	}
@@ -62,7 +77,7 @@ public final class BoundedModelCheckerTest {
 
 		final SafetyResult result = checker.check();
 		if (safe) {
-			assertEquals(SafetyResult.UNKNOWN, result);
+			assertEquals(SafetyResult.SAFE, result);
 		} else {
 			assertEquals(SafetyResult.UNSAFE, result);
 		}

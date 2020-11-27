@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Stopwatch;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import hu.bme.mit.theta.cfa.CFA;
 import hu.bme.mit.theta.core.stmt.Stmt;
 import hu.bme.mit.theta.core.type.Expr;
@@ -110,6 +113,7 @@ public final class BoundedModelChecker implements SafetyChecker {
 
 			queue.add(new PathVertex(0, 0, actLoc, null));
 			path.add(new PathVertex(0, 0, actLoc, null));
+			int pathIndex = 1;
 
 			/* Backward */
 			Vector<PathVertex> pathBW = new Vector<>();
@@ -125,19 +129,35 @@ public final class BoundedModelChecker implements SafetyChecker {
 			while (true) {
 				depth++;
 
+				if (depth % 10 == 0) {
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Date date = new Date();
+					System.out.println(formatter.format(date));
+					System.out.println("stopwatch: " + stopwatch.elapsed(TimeUnit.SECONDS));
+					System.out.println("depth: " + depth + " pathSize: " + path.size() + " pathBWSize: " + pathBW.size());
+					System.out.println("queueSize: " + queue.size() + " queueBWSize: " + queueBW.size());
+					System.out.println("");
+
+					/*
+					if (stopwatch.elapsed(TimeUnit.SECONDS) > 300) {
+						return SafetyResult.UNKNOWN;
+					}
+					 */
+				}
+
 				availablePaths = 0;
 
 				for (PathVertex item: queue) {
 					for (CFA.Edge edge : item.loc.getOutEdges()) {
 						CFA.Loc nextLoc = edge.getTarget();
-						PathVertex nextPV = new PathVertex(path.size(), item.key, nextLoc, edge);
-
-						path.add(nextPV); // TODO: in the future it shall be inside of the if
+						PathVertex nextPV = new PathVertex(pathIndex, item.key, nextLoc, edge);
 
 						/* 1 */
-						List<Stmt> stmts = getStmtList(getEdgePathFromElement(path, path.lastElement(),true));
+						List<Stmt> stmts = getStmtList(getEdgePathFromElement(path, nextPV,true));
 						Collection<Expr<BoolType>> exprs = StmtToExprTransformer.unfold(stmts);
 						if (isSat(solver, exprs)) {
+							path.add(nextPV);
+							pathIndex++;
 							queue2.add(nextPV);
 							availablePaths++;
 						}
@@ -148,13 +168,13 @@ public final class BoundedModelChecker implements SafetyChecker {
 				/* 1 */
 				if (availablePaths == 0) {
 					System.out.println("SAFE -- 1. depth: " + depth);
-					return SafetyResult.UNKNOWN; // TODO: change it to SAFE
+					return SafetyResult.SAFE;
 				}
 
 				/* 2 */
 				if (!isSatError(queueBW, queue2BW, pathBW, solver)) {
 					System.out.println("SAFE -- 2. depth: " + depth);
-					return SafetyResult.UNKNOWN; // TODO: change it to SAFE
+					return SafetyResult.SAFE;
 				}
 
 				/* 3 */
@@ -185,11 +205,13 @@ public final class BoundedModelChecker implements SafetyChecker {
 
 		while (actPV.key != 0) {
 			edgeList.add(actPV.parentEdge);
-			actPV = path.get(actPV.parentKey);
+			actPV = findVertexWithParentKey(path, actPV.parentKey);
+			// actPV = path.get(actPV.parentKey);
 		}
 
 		if (reverse) {
-			return reverseList(edgeList);
+			Collections.reverse(edgeList);
+			return edgeList;
 		} else {
 			return edgeList;
 		}
@@ -205,17 +227,6 @@ public final class BoundedModelChecker implements SafetyChecker {
 		return stmtList;
 	}
 
-	// TODO: more efficient way to reverse the list
-	private List<CFA.Edge> reverseList(List<CFA.Edge> edgeList) {
-		List<CFA.Edge> reversedEdgeList = new ArrayList<>();
-
-		for (int i = edgeList.size() - 1; i >= 0; i--) {
-			reversedEdgeList.add(edgeList.get(i));
-		}
-
-		return reversedEdgeList;
-	}
-
 	private void writeOutPath(Vector<PathVertex> path, PathVertex item) {
 		PathVertex actPV = item;
 		List<String> pathListForWritingOut = new ArrayList<>();
@@ -224,7 +235,8 @@ public final class BoundedModelChecker implements SafetyChecker {
 			if (actPV.loc.getName().length() != 0) {
 				pathListForWritingOut.add(actPV.loc.getName());
 			}
-			actPV = path.get(actPV.parentKey);
+			actPV = findVertexWithParentKey(path, actPV.parentKey);
+			// actPV = path.get(actPV.parentKey);
 		}
 		pathListForWritingOut.add(actPV.loc.getName());
 		for (int idx = pathListForWritingOut.size() - 1; idx >= 0; idx--) {
@@ -236,7 +248,30 @@ public final class BoundedModelChecker implements SafetyChecker {
 		System.out.println();
 	}
 
-	/* private void writeOutPathTree(Vector<PathVertex> path) {
+	private PathVertex findVertexWithParentKey(Vector<PathVertex> path, int paretKey) {
+		int pointer = 0;
+		int max_interval = path.size() - 1;
+		int m;
+
+		while (pointer <= max_interval) {
+			m = pointer + (max_interval - pointer) / 2;
+
+			if (path.get(m).key == paretKey) {
+				return path.get(m);
+			}
+
+			if (path.get(m).key < paretKey) {
+				pointer = m + 1;
+			} else {
+				max_interval = m - 1;
+			}
+		}
+
+		System.out.println("\n---ERROR getParentKey()---\n");
+		return null;
+	}
+
+	private void writeOutPathTree(Vector<PathVertex> path) {
 		int path_size_max = 100;
 		if (path.size() < path_size_max) {
 			path_size_max = path.size();
@@ -259,7 +294,7 @@ public final class BoundedModelChecker implements SafetyChecker {
 			}
 			System.out.print("parent key: " + path.get(i).parentKey + "\n");
 		}
-	} */
+	}
 
 	private void queueTransfer(Queue<PathVertex> copyOne, Queue<PathVertex> pasteOne) {
 		pasteOne.clear();
@@ -303,4 +338,5 @@ public final class BoundedModelChecker implements SafetyChecker {
 
 		return availablePaths != 0;
 	}
+
 }
